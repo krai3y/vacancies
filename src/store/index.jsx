@@ -1,6 +1,6 @@
 import { create } from 'zustand'
-import { createUserSlice } from './slices/createUserSlice'
+import { userSlice } from './slices/createUserSlice'
 
 export const useStore = create((set, get) => ({
-  ...createUserSlice(set, get),
+  ...userSlice(set, get),
 }))
