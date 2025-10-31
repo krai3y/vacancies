@@ -18,31 +18,35 @@ function App() {
   const deleteUser = useStore((state) => state.deleteUser)
   const updateUser = useStore((state) => state.updateUser)
 
-  const [isEdit, setIsEdit] = useState(false)
+  const [isEdit, setIsEdit] = useState(false);
+  const [itemToEdit, setItemToEdit] = useState(null);
   
   
   useEffect(() => {
     fetchUsers()
   }, [fetchUsers])
 
-  const handleUpdate = (e) => {
-    
+  const handleUpdate = (id) => {
+    setItemToEdit(id);
+    setIsEdit(!isEdit);
   }
   
   if (loading) return  <div>Загрузка...</div>
   if (error) return  <div>Ошибка!</div>
 
   return (
-    <div className="flex flex-row flex-wrap gap-3" style={{ padding: '20px' }}>
+    <div className="flex flex-wrap px-5">
       {users.map( user => { return (
-        <div className='flex items-center flex-col p-5'>
-          {isEdit ? <input type="text" value={user.name} onChange={(e) => updateUser(user.id, e.target.value)} /> : <p key={user.id}>{user.name}</p> }
-          <button className="w-full" onClick={() => deleteUser(user.id)}>
-            <FontAwesomeIcon icon="fa-solid fa-xmark" size="sm" style={{color: "#d11515",}} />
-          </button>
-          <button className="w-full" onClick={() => setIsEdit(!isEdit)}>
-            {isEdit ? <FontAwesomeIcon icon="fa-solid fa-check" size="sm" /> : <FontAwesomeIcon icon="fa-solid fa-pen" size="sm" />}
-          </button>
+        <div className='p-5 basis-1/5'>
+          <div className='flex flex-col basis-1/5 p-5 border rounded-md'>
+            {itemToEdit === user.id && isEdit ? <input type="text" value={user.name} onChange={(e) => updateUser(user.id, e.target.value)} /> : <p key={user.id}>{user.name}</p> }
+            <button className="w-full" onClick={() => handleUpdate(user.id)}>
+              {itemToEdit === user.id && isEdit ? <FontAwesomeIcon icon="fa-solid fa-check" size="sm" /> : <FontAwesomeIcon icon="fa-solid fa-pen" size="sm" />}
+            </button>
+            <button className="w-full" onClick={() => deleteUser(user.id)}>
+              <FontAwesomeIcon icon="fa-solid fa-trash" size="sm" />
+            </button>
+          </div>
         </div>
       )} )}
     </div>
